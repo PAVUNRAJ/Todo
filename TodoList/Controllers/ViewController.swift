@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
