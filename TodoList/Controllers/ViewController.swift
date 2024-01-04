@@ -199,6 +199,7 @@ extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print(searchBar.text!)
         
+        
         let req : NSFetchRequest<Item> =  Item.fetchRequest()
         
         let predicate =  NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text ?? "")
