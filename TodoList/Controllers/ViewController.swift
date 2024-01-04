@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import SwipeCellKit
+import ChameleonFramework
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
@@ -16,6 +17,7 @@ class ViewController: UIViewController {
     var itemArr = [Item]()
     var fileManager =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist", isDirectory: true)
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var itemColour = String()
     var selectedCategory : Category? {
         didSet {
             loadItem()
@@ -26,6 +28,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         //print(fileManager)
         print(context)
+        print("Colour is",itemColour)
         
         navigationItem.title =  "ToDo"
         tableView.register(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
@@ -49,6 +52,16 @@ class ViewController: UIViewController {
         */
         let req : NSFetchRequest<Item> = Item.fetchRequest()
         loadItem(with: req)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.backgroundColor = UIColor(hexString: selectedCategory?.colour ?? "")
+        title = selectedCategory?.name
+        navigationController?.navigationBar.tintColor = ContrastColorOf(UIColor(hexString: selectedCategory?.colour ?? "")!, returnFlat: true)
+        navigationController?.toolbar.barTintColor = UIColor(hexString: selectedCategory?.colour ?? "")
+        searchBar.barTintColor = UIColor(hexString: selectedCategory?.colour ?? "")
+
     }
 
 
@@ -161,6 +174,14 @@ extension ViewController : UITableViewDataSource {
         let item = itemArr[indexPath.row]
         cell.title.text = item.title
         cell.selectionStyle = .none
+        print("jdsbfkjasd",selectedCategory?.colour)
+        if let colour = UIColor(hexString: selectedCategory?.colour ?? "#D85458")?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(itemArr.count) ){
+            cell.bgView.backgroundColor = colour
+            cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: false)
+
+        }
+       // cell.backgroundColor = UIColor(hexString: (selectedCategory?.colour)!)
+
         cell.accessoryType = item.done ? .checkmark : .none
        // item.done? cell.accessoryType = .checkmark : cell.accessoryType = .none
         //let check =  itemArr[indexPath.row].done =  !itemArr[indexPath.row].done

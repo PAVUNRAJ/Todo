@@ -10,6 +10,7 @@ import UIKit
 class Cell: UITableViewCell {
 
     @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var bgView: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import SwipeCellKit
+import ChameleonFramework
 
 class CategoryVC: UIViewController {
 
@@ -21,8 +22,14 @@ class CategoryVC: UIViewController {
         tableView.dataSource =  self
         navigationItem.title = "Category"
         loadCategory()
+        
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+    }
 
     // MARK: - NavigationBar button action
     
@@ -34,6 +41,7 @@ class CategoryVC: UIViewController {
            // let item = Item()
             let item = Category(context: self.context)
             item.name = textFiled.text ?? "Dd"
+            item.colour = UIColor.randomFlat().hexValue()
           //  print("Success.",)
             self.categoryArr.append(item)
             self.saveCategory()
@@ -104,6 +112,7 @@ extension CategoryVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as! ViewController
         vc.selectedCategory =  categoryArr[indexPath.row]
+        vc.itemColour = categoryArr[indexPath.row].colour ?? "ff40ff"
         navigationController?.pushViewController(vc, animated: true)
     }
    
@@ -117,6 +126,9 @@ extension CategoryVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
         cell.delegate = self
+        cell.selectionStyle = .none
+      //  cell.backgroundColor = UIColor.randomFlat()
+        cell.backgroundColor = UIColor(hexString: categoryArr[indexPath.row].colour ?? "ff40ff")
         
        
         cell.categoryName.text = categoryArr[indexPath.row].name
